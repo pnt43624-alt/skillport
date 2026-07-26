@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skillport"
+version = "0.1.0"
+description = "One CLI to install, convert, validate, and sync AI agent skills across Claude Code, Cursor, Codex, Copilot, Windsurf, and more."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "SkillPort Contributors" }]
+keywords = [
+  "ai",
+  "agents",
+  "skills",
+  "claude-code",
+  "cursor",
+  "codex",
+  "copilot",
+  "agentskills",
+  "llm",
+  "developer-tools",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Utilities",
+]
+dependencies = [
+  "click>=8.1",
+  "rich>=13.7",
+  "pyyaml>=6.0",
+  "httpx>=0.27",
+  "packaging>=23.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[project.scripts]
+skillport = "skillport.cli:main"
+sp = "skillport.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/pnt43624-alt/skillport"
+Documentation = "https://github.com/pnt43624-alt/skillport#readme"
+Issues = "https://github.com/pnt43624-alt/skillport/issues"
+Source = "https://github.com/pnt43624-alt/skillport"
+
+[tool.setuptools.packages.find]
+include = ["skillport*"]
+
+[tool.setuptools.package-data]
+skillport = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
