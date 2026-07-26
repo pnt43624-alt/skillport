@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
 
@@ -29,6 +29,9 @@ class Skill:
     allowed_tools: Optional[str] = None
     extra_frontmatter: Dict[str, Any] = field(default_factory=dict)
 
+    def clone(self, **kwargs: Any) -> "Skill":
+        return replace(self, **kwargs)
+
     def validate(self) -> List[str]:
         errors: List[str] = []
         if not self.name:
@@ -48,7 +51,28 @@ class Skill:
             errors.append("compatibility must be <= 500 characters")
         if not self.body or not self.body.strip():
             errors.append("SKILL.md body (instructions) must not be empty")
+        if "<" in self.description or ">" in self.description:
+            # soft: agentskills discourages angle brackets in description
+            pass
         return errors
+
+    def warnings(self) -> List[str]:
+        warns: List[str] = []
+        if self.description and len(self.description) < 40:
+            warns.append("description is short; add when-to-use keywords for better routing")
+        if self.body and len(self.body.strip()) < 120:
+            warns.append("body is very short; add steps/examples for reliability")
+        if not self.metadata.get("tags"):
+            warns.append("metadata.tags missing — harder to search in catalogs")
+        lower = (self.body or "").lower()
+        if "todo" in lower or "tbd" in lower:
+            warns.append("body still contains TODO/TBD placeholders")
+        if self.name and self.name in {"skill", "test", "demo", "tmp", "temp"}:
+            warns.append(f"name '{self.name}' looks generic")
+        return warns
+
+    def validate_report(self) -> Tuple[List[str], List[str]]:
+        return self.validate(), self.warnings()
 
     def to_frontmatter(self) -> Dict[str, Any]:
         data: Dict[str, Any] = {
@@ -72,15 +96,28 @@ class Skill:
             sort_keys=False,
             allow_unicode=True,
             default_flow_style=False,
+            width=1000,
         ).strip()
         body = self.body.lstrip("\n").rstrip() + "\n"
         return f"---\n{fm}\n---\n\n{body}"
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "description": self.description,
+            "license": self.license,
+            "compatibility": self.compatibility,
+            "metadata": self.metadata,
+            "allowed_tools": self.allowed_tools,
+            "body": self.body,
+            "path": str(self.path) if self.path else None,
+        }
+
     @classmethod
     def from_skill_md(cls, text: str, path: Optional[Path] = None) -> "Skill":
-        match = FRONTMATTER_RE.match(text.strip() + ("\n" if not text.endswith("\n") else ""))
+        raw = text if text.endswith("\n") else text + "\n"
+        match = FRONTMATTER_RE.match(raw)
         if not match:
-            # allow missing trailing newline variants
             match = FRONTMATTER_RE.match(text)
         if not match:
             raise SkillError("SKILL.md must start with YAML frontmatter (--- ... ---)")
@@ -136,16 +173,25 @@ class Skill:
         return skill
 
 
+def slugify(value: str) -> str:
+    value = value.strip().lower()
+    value = re.sub(r"[^a-z0-9]+", "-", value)
+    value = value.strip("-")
+    value = re.sub(r"-{2,}", "-", value)
+    return value[:64] or "skill"
+
+
 def find_skill_dirs(root: Path) -> List[Path]:
     """Find skill directories (contain SKILL.md) under root."""
     root = root.resolve()
+    if root.is_file() and root.name == "SKILL.md":
+        return [root.parent]
     if (root / "SKILL.md").exists():
         return [root]
     found: List[Path] = []
     for p in sorted(root.rglob("SKILL.md")):
-        # skip nested node_modules / venv noise
         parts = set(p.parts)
-        if parts & {".git", "node_modules", ".venv", "venv", "__pycache__"}:
+        if parts & {".git", "node_modules", ".venv", "venv", "__pycache__", ".tox"}:
             continue
         found.append(p.parent)
     return found
