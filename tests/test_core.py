@@ -44,7 +44,21 @@ def test_cursor_conversion():
     assert "alwaysApply:" in out
     assert "demo-skill" in out
     assert "Do the thing carefully." in out
+    
+def test_jetbrains_conversion():
+    skill = Skill.from_skill_md(SAMPLE)
+    out = render_for_tool(skill, "jetbrains")
 
+    assert "demo-skill" in out
+    assert "Do the thing carefully." in out
+
+
+def test_zed_conversion():
+    skill = Skill.from_skill_md(SAMPLE)
+    out = render_for_tool(skill, "zed")
+
+    assert "demo-skill" in out
+    assert "Do the thing carefully." in out
 
 def test_install_to_project(tmp_path: Path):
     skill = Skill.from_skill_md(SAMPLE)
