@@ -5,197 +5,172 @@
 <h1 align="center">SkillPort</h1>
 
 <p align="center">
-  <strong>One CLI to install AI agent skills once — and run them everywhere.</strong><br/>
-  Claude Code · Cursor · Codex · Copilot · Windsurf · Continue · Aider · Cline · AGENTS.md
+  <strong>The package manager for AI agent skills.</strong><br/>
+  Install once → run on Claude Code, Cursor, Codex, Copilot, Windsurf, Zed, JetBrains, Cline, Continue, Aider, OpenCode & AGENTS.md
 </p>
 
 <p align="center">
-  <a href="https://pypi.org/project/skillport/"><img alt="PyPI" src="https://img.shields.io/badge/pip_install-skillport-0ea5e9?style=flat-square" /></a>
+  <img alt="version" src="https://img.shields.io/badge/version-0.2.0-0ea5e9?style=flat-square" />
   <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-green?style=flat-square" /></a>
   <a href="https://agentskills.io"><img alt="agentskills" src="https://img.shields.io/badge/spec-agentskills.io-8b5cf6?style=flat-square" /></a>
-  <a href="#quickstart"><img alt="python" src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" /></a>
-  <img alt="tools" src="https://img.shields.io/badge/tools-10_targets-f59e0b?style=flat-square" />
+  <img alt="python" src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" />
+  <img alt="skills" src="https://img.shields.io/badge/builtin_skills-16-f59e0b?style=flat-square" />
+  <img alt="tools" src="https://img.shields.io/badge/targets-13-10b981?style=flat-square" />
+  <img alt="tests" src="https://img.shields.io/badge/tests-18_passed-22c55e?style=flat-square" />
 </p>
 
 <p align="center">
   <a href="#quickstart">Quickstart</a> ·
   <a href="#why-skillport">Why</a> ·
   <a href="#commands">Commands</a> ·
-  <a href="#supported-tools">Tools</a> ·
+  <a href="#skill-packs">Packs</a> ·
   <a href="#built-in-skills">Skills</a> ·
-  <a href="#convert-any-skill">Convert</a> ·
-  <a href="#launch--star-growth">Launch</a>
+  <a href="#bidirectional-convert">Convert</a> ·
+  <a href="#launch">Launch</a>
 </p>
 
 ---
 
 ## The problem
 
-In 2026 every AI coding tool wants skills in a **different folder and format**:
+Every AI coding tool stores “skills” differently:
 
-| Tool | Where skills live | Format |
-|------|-------------------|--------|
-| Claude Code | `.claude/skills/<name>/SKILL.md` | Agent Skills spec |
-| Cursor | `.cursor/rules/<name>.mdc` | MDC frontmatter |
+| Tool | Path | Format |
+|------|------|--------|
+| Claude Code | `.claude/skills/<name>/SKILL.md` | Agent Skills |
+| Cursor | `.cursor/rules/<name>.mdc` | MDC |
 | Codex | `.codex/skills/...` | SKILL.md |
-| Copilot | `.github/copilot-instructions/` | freeform MD |
-| Windsurf / Cline / Continue / Aider | each different | each different |
+| Copilot / Windsurf / Cline / … | each different | freeform MD |
 
-So teams copy-paste the same prompt 6 times, drift out of sync, and ship inconsistent agent behavior.
+Teams rewrite the same prompt 6 times. It drifts. Reviews get worse.
 
-**SkillPort fixes that.**
-
-```bash
-skillport install pr-review --to claude,cursor,codex,copilot
-```
-
-One source skill → every tool you actually use.
-
----
-
-## Demo
+## The fix
 
 ```bash
-# Install SkillPort
-pip install skillport
-
-# See what you can target
-skillport tools
-
-# Search the built-in catalog
-skillport search review
-
-# Drop a PR-review skill into Claude + Cursor in one shot
-skillport install pr-review --to claude,cursor
-
-# Convert any SKILL.md into a Cursor rule
-skillport convert ./skills/security-audit --to cursor -o .cursor/rules/security-audit.mdc
-
-# Validate against the agentskills.io spec
-skillport validate ./skills
-
-# Health-check a repo
-skillport doctor
+pip install skillport   # or: pip install -e . from source
+skillport install pack:essentials --to claude,cursor,codex,copilot
 ```
 
-<details>
-<summary><strong>Example: Claude SKILL.md → Cursor .mdc (automatic)</strong></summary>
-
-**Input** (`SKILL.md`):
-
-```yaml
----
-name: pr-review
-description: Structured pull-request review...
-metadata:
-  globs: "**/*"
----
-## Goal
-Produce a high-signal PR review...
-```
-
-**Output** (`.cursor/rules/pr-review.mdc`):
-
-```yaml
----
-description: Structured pull-request review...
-globs: **/*
-alwaysApply: false
----
-# pr-review
-
-## Goal
-Produce a high-signal PR review...
-```
-
-</details>
-
----
-
-## Why SkillPort?
-
-| Pain | SkillPort |
-|------|-----------|
-| Skills locked to one vendor | **10 targets** out of the box |
-| Broken YAML / bad names | **`validate`** against agentskills.io |
-| "Works on my Claude, not your Cursor" | **`sync`** + lockfile |
-| Copy-paste rot | **One canonical SKILL.md** |
-| Empty repo bootstrap | **`init`** + starter skills |
-| Remote catalogs | install from `owner/repo` or git URL |
-
-Built for the wave of [Agent Skills](https://agentskills.io), Claude Skills, Cursor rules, and AGENTS.md — not against it.
+**One canonical `SKILL.md` → every tool you actually use.**
 
 ---
 
 ## Quickstart
 
-### Install
-
 ```bash
-pip install skillport
-# or
-pipx install skillport
-```
-
-From source:
-
-```bash
+# from source
 git clone https://github.com/pnt43624-alt/skillport.git
 cd skillport
 pip install -e ".[dev]"
+
+skillport tools
+skillport packs
+skillport search review
+skillport install pack:essentials --to claude,cursor
+skillport doctor
 ```
 
-### Initialize a project
+Scaffold a repo:
 
 ```bash
-cd your-repo
-skillport init --tools claude,cursor
+cd your-project
+skillport init --tools claude,cursor --pack essentials
 ```
 
-Creates:
+---
 
-- `.skillport.json` — tool targets
-- starter skills (`pr-review`, `commit`) installed for those tools
-- `skillport.lock.json` — reproducible installs
+## Why SkillPort?
 
-### Install more skills
-
-```bash
-# Built-in
-skillport install security-audit --to claude,cursor,copilot
-
-# Local path
-skillport install ./my-skills/foo --to all
-
-# GitHub shorthand (clones shallow)
-skillport install anthropics/skills --to claude
-
-# Full git URL + subfolder tree URLs supported
-skillport install https://github.com/org/repo.git --to cursor
-```
+| Capability | v0.2 |
+|------------|------|
+| Targets | **13** (Claude, Cursor, Codex, Copilot, Windsurf, Continue, Aider, Cline, Zed, JetBrains, OpenCode, AGENTS.md, generic) |
+| Built-in skills | **16** production-ready |
+| Packs | essentials, security, shipping, quality, ops, all |
+| Convert | **bidirectional** (SKILL.md ↔ Cursor `.mdc` ↔ markdown rules) |
+| Validate | agentskills.io + warnings (`--strict`) |
+| Lockfile | `skillport.lock.json` + `sync` / `uninstall` |
+| Registry | `registry/index.json` + `skillport registry` |
+| DX | `doctor --fix`, `diff`, `show`, `info`, JSON output |
 
 ---
 
 ## Commands
 
-| Command | What it does |
-|---------|----------------|
-| `skillport tools` | List supported AI tools + install paths |
-| `skillport search [q]` | Search built-in catalog |
-| `skillport init` | Scaffold config + optional examples |
-| `skillport install <src>` | Install skill(s) to target tools |
-| `skillport convert <src> --to <tool>` | Convert format (stdout or `-o`) |
-| `skillport validate [path]` | Spec validation (CI-friendly) |
-| `skillport list` | Show installed skills |
+| Command | Purpose |
+|---------|---------|
+| `skillport tools` | List targets + install paths |
+| `skillport packs` | List skill packs |
+| `skillport search [q]` | Search catalog / packs / registry |
+| `skillport info <name>` | Metadata + preview |
+| `skillport init` | Config + starter pack |
+| `skillport install <src>` | Builtin, `pack:`, path, `owner/repo`, git URL |
+| `skillport uninstall <name>` | Remove projections + lock entry |
+| `skillport convert <src> --to <tool>` | Bidirectional convert |
+| `skillport import <file> -o <dir>` | Cursor/md → SKILL.md |
+| `skillport validate [path]` | Spec validation (CI) |
+| `skillport list` | Installed skills |
 | `skillport sync` | Re-apply lockfile |
-| `skillport doctor` | Project health check |
-| `skillport new <name>` | Scaffold a new skill template |
+| `skillport doctor [--fix]` | Health + drift |
+| `skillport new <name>` | Scaffold skill |
+| `skillport show <src>` | Print canonical SKILL.md |
+| `skillport diff <a> <b>` | Unified diff two skills |
+| `skillport registry` | Build/fetch registry index |
 
-Global alias: `sp` (same CLI).
+Alias: `sp`.
 
 ---
 
-## Supported tools
+## Skill packs
+
+```bash
+skillport install pack:essentials --to claude,cursor
+skillport install pack:security --to all
+skillport install pack:shipping --to claude,copilot
+```
+
+| Pack | Skills |
+|------|--------|
+| **essentials** | pr-review, commit, test-writer, debug, docs-writer |
+| **security** | security-audit, dependency-audit, sql-review |
+| **shipping** | pr-review, test-writer, release-notes, changelog, docs-writer |
+| **quality** | refactor, performance, api-design, code-explain, test-writer |
+| **ops** | incident-response, performance, security-audit |
+| **all** | every built-in skill |
+
+---
+
+## Built-in skills (16)
+
+`pr-review` · `commit` · `security-audit` · `docs-writer` · `test-writer` · `refactor` · `debug` · `api-design` · `release-notes` · `changelog` · `code-explain` · `performance` · `dependency-audit` · `incident-response` · `sql-review` · `prompt-engineer`
+
+```bash
+skillport search
+skillport show debug
+skillport install prompt-engineer --to claude,cursor
+```
+
+---
+
+## Bidirectional convert
+
+```bash
+# Agent Skill → Cursor rule
+skillport convert ./skills/pr-review --to cursor -o .cursor/rules/pr-review.mdc
+
+# Cursor rule → Agent Skill
+skillport import .cursor/rules/pr-review.mdc -o ./skills/pr-review
+
+# Skill → Copilot / Zed / JetBrains / AGENTS.md
+skillport convert pr-review --to copilot -o out/
+skillport convert pr-review --to zed -o out/
+skillport install pr-review --to agents
+```
+
+Canonical format: **[agentskills.io SKILL.md](https://agentskills.io/specification)**.
+
+---
+
+## Supported tools (13)
 
 | ID | Tool | Output |
 |----|------|--------|
@@ -207,49 +182,26 @@ Global alias: `sp` (same CLI).
 | `continue` | Continue.dev | `.continue/rules/<name>.md` |
 | `aider` | Aider | `.aider/skills/<name>.md` |
 | `cline` | Cline | `.clinerules/<name>.md` |
-| `agents` | Universal AGENTS.md | append section with markers |
-| `generic` | Portable SKILL.md | `skills/<name>/SKILL.md` |
-
-```bash
-skillport install commit --to all
-```
-
----
-
-## Built-in skills
-
-| Name | Use when |
-|------|----------|
-| `pr-review` | Reviewing pull requests / diffs |
-| `commit` | Writing conventional commit messages |
-| `security-audit` | Pre-merge security pass |
-| `docs-writer` | README / docs that convert readers |
-
-```bash
-skillport search
-skillport install docs-writer --to claude,cursor
-```
+| `zed` | Zed | `.rules/<name>.md` |
+| `jetbrains` | JetBrains AI | `.aiassistant/rules/<name>.md` |
+| `opencode` | OpenCode | `.opencode/skills/<name>/SKILL.md` |
+| `agents` | AGENTS.md | marked sections |
+| `generic` | Portable | `skills/<name>/SKILL.md` |
 
 ---
 
-## Convert any skill
+## CI
 
-```bash
-# Print Cursor rule to stdout
-skillport convert ./skills/pr-review --to cursor
-
-# Write file
-skillport convert ./skills/pr-review --to copilot -o out/pr-review.md
-
-# Validate first (great in CI)
-skillport validate ./skills && echo OK
+```yaml
+- run: pip install skillport
+- run: skillport validate ./skills --strict
 ```
 
-Canonical format is **[agentskills.io SKILL.md](https://agentskills.io/specification)** — YAML frontmatter + markdown body.
+Template (if Actions workflow scope is limited): [`docs/ci.github-actions.yml`](docs/ci.github-actions.yml)
 
 ---
 
-## Project layout after install
+## Project files after install
 
 ```text
 your-repo/
@@ -260,97 +212,51 @@ your-repo/
 └── .github/copilot-instructions/pr-review.md
 ```
 
-Commit the generated tool files **or** commit only lockfile + sources and run `skillport sync` in CI/bootstrap — your choice.
-
 ---
 
-## CI validation
-
-```yaml
-# .github/workflows/skills.yml
-- name: Validate skills
-  run: |
-    pip install skillport
-    skillport validate ./skills
-```
-
----
-
-## Create your own skill
+## Create a skill
 
 ```bash
-skillport new invoice-parser --description "Extract invoice fields from PDFs"
+skillport new invoice-parser --description "Extract invoice fields from PDFs" --tag finance
 skillport validate ./invoice-parser
 skillport install ./invoice-parser --to claude,cursor
-```
-
-Minimal `SKILL.md`:
-
-```markdown
----
-name: invoice-parser
-description: Extract invoice fields from PDFs and images for bookkeeping agents.
----
-
-## Instructions
-
-1. ...
 ```
 
 ---
 
 ## Design principles
 
-1. **SKILL.md is the source of truth** — everything else is a projection.
-2. **Zero daemon** — pure CLI, works offline for local skills.
-3. **Safe by default** — won't overwrite without `--force`.
-4. **CI-friendly** — `validate` exits non-zero on bad skills.
-5. **Boring stack** — Python 3.9+, Click, Rich, PyYAML.
+1. **SKILL.md is source of truth** — everything else is a projection  
+2. **Zero daemon** — pure CLI, offline for local skills  
+3. **Safe default** — no overwrite without `--force`  
+4. **CI-friendly** — non-zero exit on invalid skills  
+5. **Boring stack** — Python 3.9+, Click, Rich, PyYAML  
 
 ---
 
 ## Roadmap
 
-- [ ] Official registry (`skillport publish` / search remote index)
-- [ ] Bidirectional import (Cursor `.mdc` → SKILL.md)
-- [ ] VS Code / JetBrains companion
-- [ ] Skill versioning & signing
-- [ ] Team policy packs (required skills per repo)
+- [x] Bidirectional Cursor import  
+- [x] Skill packs  
+- [x] Registry index  
+- [x] Uninstall + doctor drift  
+- [x] Zed / JetBrains / OpenCode targets  
+- [ ] Hosted community registry  
+- [ ] `skillport publish`  
+- [ ] Skill versioning & signing  
+- [ ] VS Code companion  
 
-PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+See [Issues](https://github.com/pnt43624-alt/skillport/issues) and [docs/LAUNCH.md](docs/LAUNCH.md).
 
 ---
 
-## Launch & star growth
+## Launch
 
-If SkillPort saves you time, **star the repo** — it helps other devs discover a neutral skill layer instead of another walled garden.
+Star the repo if this saves you time. Distribution playbook: **[docs/LAUNCH.md](docs/LAUNCH.md)**.
 
-Share your setup:
-
-```bash
-skillport doctor
+```text
+Show HN: SkillPort – npm for AI agent skills (Claude/Cursor/Codex/Copilot)
 ```
-
-Post your `skillport install ...` one-liners in Discussions.
-
----
-
-## FAQ
-
-**Is this affiliated with Anthropic / OpenAI / Cursor?**  
-No. SkillPort is an independent open-source bridge implementing the public Agent Skills ideas and practical editor layouts.
-
-**Will conversion be lossy?**  
-Metadata that only exists in one ecosystem (e.g. Cursor `alwaysApply`) is preserved when present under `metadata` and best-effort mapped. Body instructions stay intact.
-
-**Can I use it privately?**  
-Yes. MIT licensed. Local paths never leave your machine. Remote install only runs when you pass a git URL.
-
----
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=pnt43624-alt/skillport&type=Date)](https://star-history.com/#pnt43624-alt/skillport&Date)
 
 ---
 
@@ -358,8 +264,4 @@ Yes. MIT licensed. Local paths never leave your machine. Remote install only run
 
 [MIT](LICENSE) © SkillPort Contributors
 
----
-
-<p align="center">
-  <sub>Built for people who use more than one AI coding agent — which is everyone now.</sub>
-</p>
+<p align="center"><sub>Built for people who use more than one AI coding agent.</sub></p>
