@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "skillport"
-version = "0.1.0"
-description = "One CLI to install, convert, validate, and sync AI agent skills across Claude Code, Cursor, Codex, Copilot, Windsurf, and more."
+version = "0.2.0"
+description = "Universal AI agent skill manager: install, convert, validate, pack, and sync skills across Claude Code, Cursor, Codex, Copilot, Windsurf, Zed, JetBrains, and more."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
