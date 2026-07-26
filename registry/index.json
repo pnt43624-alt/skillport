@@ -1,0 +1,234 @@
+{
+  "name": "skillport-builtin",
+  "version": 1,
+  "skills": [
+    {
+      "name": "api-design",
+      "description": "Design clean REST or GraphQL APIs with consistent resource modeling, errors, pagination, and versioning. Use when adding or revising HTTP APIs.",
+      "tags": [
+        "api",
+        "design"
+      ],
+      "source": "builtin:api-design",
+      "path": "skills/api-design",
+      "version": "0.2.0"
+    },
+    {
+      "name": "changelog",
+      "description": "Maintain Keep-a-Changelog and semver-oriented CHANGELOG entries from git history. Use when preparing versions or backfilling history.",
+      "tags": [
+        "release",
+        "docs",
+        "git"
+      ],
+      "source": "builtin:changelog",
+      "path": "skills/changelog",
+      "version": "0.2.0"
+    },
+    {
+      "name": "code-explain",
+      "description": "Explain complex code paths in plain language with structure, invariants, and diagrams when useful. Use for onboarding, reviews, or understanding legacy code.",
+      "tags": [
+        "docs",
+        "learning"
+      ],
+      "source": "builtin:code-explain",
+      "path": "skills/code-explain",
+      "version": "0.2.0"
+    },
+    {
+      "name": "commit",
+      "description": "Write conventional, high-signal git commit messages from a staged diff. Use when the user asks to commit, draft a commit message, or summarize changes.",
+      "tags": [
+        "git",
+        "commit"
+      ],
+      "source": "builtin:commit",
+      "path": "skills/commit",
+      "version": "0.2.0"
+    },
+    {
+      "name": "debug",
+      "description": "Systematic debugging to reproduce, isolate, hypothesize, fix, and verify failures. Use for bugs, flaky tests, crashes, and unexpected behavior.",
+      "tags": [
+        "debug",
+        "quality"
+      ],
+      "source": "builtin:debug",
+      "path": "skills/debug",
+      "version": "0.2.0"
+    },
+    {
+      "name": "dependency-audit",
+      "description": "Review dependencies for security risk, bloat, license issues, and upgrade strategy. Use when adding packages or doing periodic audits.",
+      "tags": [
+        "security",
+        "deps"
+      ],
+      "source": "builtin:dependency-audit",
+      "path": "skills/dependency-audit",
+      "version": "0.2.0"
+    },
+    {
+      "name": "docs-writer",
+      "description": "Turn messy notes or repos into crisp README and docs with problem statement, quickstart, examples, and pitfalls. Use when writing or rewriting documentation.",
+      "tags": [
+        "docs",
+        "writing"
+      ],
+      "source": "builtin:docs-writer",
+      "path": "skills/docs-writer",
+      "version": "0.2.0"
+    },
+    {
+      "name": "incident-response",
+      "description": "Run an engineering incident from triage through mitigation, communication, and postmortem. Use during outages or severe production defects.",
+      "tags": [
+        "ops",
+        "incident"
+      ],
+      "source": "builtin:incident-response",
+      "path": "skills/incident-response",
+      "version": "0.2.0"
+    },
+    {
+      "name": "performance",
+      "description": "Profile and optimize hot paths with measurements first. Use for latency, CPU, memory, or database slowdowns.",
+      "tags": [
+        "performance",
+        "quality"
+      ],
+      "source": "builtin:performance",
+      "path": "skills/performance",
+      "version": "0.2.0"
+    },
+    {
+      "name": "pr-review",
+      "description": "Structured pull-request review covering correctness, security, tests, API design, and clarity. Use when reviewing diffs, PRs, or pre-merge changes.",
+      "tags": [
+        "git",
+        "review",
+        "quality"
+      ],
+      "source": "builtin:pr-review",
+      "path": "skills/pr-review",
+      "version": "0.2.0"
+    },
+    {
+      "name": "prompt-engineer",
+      "description": "Craft robust system and user prompts, tool instructions, and lightweight evals for LLM features. Use when building AI products or agent behaviors.",
+      "tags": [
+        "ai",
+        "prompts"
+      ],
+      "source": "builtin:prompt-engineer",
+      "path": "skills/prompt-engineer",
+      "version": "0.2.0"
+    },
+    {
+      "name": "refactor",
+      "description": "Plan and apply safe, incremental refactors that improve design without changing external behavior. Use when cleaning structure, reducing duplication, or preparing for a feature.",
+      "tags": [
+        "refactor",
+        "quality"
+      ],
+      "source": "builtin:refactor",
+      "path": "skills/refactor",
+      "version": "0.2.0"
+    },
+    {
+      "name": "release-notes",
+      "description": "Draft clear user-facing release notes from commits, PR titles, and issue labels. Use before tagging a release or writing a changelog blurb.",
+      "tags": [
+        "release",
+        "docs",
+        "git"
+      ],
+      "source": "builtin:release-notes",
+      "path": "skills/release-notes",
+      "version": "0.2.0"
+    },
+    {
+      "name": "security-audit",
+      "description": "Threat-model and audit code for OWASP-style issues, secrets, auth bugs, and unsafe defaults before merge or release.",
+      "tags": [
+        "security",
+        "audit"
+      ],
+      "source": "builtin:security-audit",
+      "path": "skills/security-audit",
+      "version": "0.2.0"
+    },
+    {
+      "name": "sql-review",
+      "description": "Review SQL for correctness, injection safety, indexes, and execution-plan hazards. Use when writing or reviewing queries and migrations.",
+      "tags": [
+        "sql",
+        "data",
+        "review"
+      ],
+      "source": "builtin:sql-review",
+      "path": "skills/sql-review",
+      "version": "0.2.0"
+    },
+    {
+      "name": "test-writer",
+      "description": "Design and write high-value unit and integration tests from code or requirements. Use when adding tests, improving coverage, or turning bugs into regressions.",
+      "tags": [
+        "testing",
+        "quality"
+      ],
+      "source": "builtin:test-writer",
+      "path": "skills/test-writer",
+      "version": "0.2.0"
+    }
+  ],
+  "packs": {
+    "essentials": {
+      "description": "Daily driver skills for most engineering repos",
+      "skills": [
+        "pr-review",
+        "commit",
+        "test-writer",
+        "debug",
+        "docs-writer"
+      ]
+    },
+    "security": {
+      "description": "Security-focused review pack",
+      "skills": [
+        "security-audit",
+        "dependency-audit",
+        "sql-review"
+      ]
+    },
+    "shipping": {
+      "description": "Ship features cleanly",
+      "skills": [
+        "pr-review",
+        "test-writer",
+        "release-notes",
+        "changelog",
+        "docs-writer"
+      ]
+    },
+    "quality": {
+      "description": "Deep quality and design",
+      "skills": [
+        "refactor",
+        "performance",
+        "api-design",
+        "code-explain",
+        "test-writer"
+      ]
+    },
+    "ops": {
+      "description": "Incidents and production readiness",
+      "skills": [
+        "incident-response",
+        "performance",
+        "security-audit"
+      ]
+    }
+  }
+}
